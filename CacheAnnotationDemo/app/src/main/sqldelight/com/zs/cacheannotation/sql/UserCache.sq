@@ -1,0 +1,9 @@
+CREATE TABLE usertable (
+    sex INTEGER NOT NULL,
+    name TEXT NOT NULL,
+    age INTEGER NOT NULL
+);
+
+select_by_username:
+select * from usertable
+where name = ?;
