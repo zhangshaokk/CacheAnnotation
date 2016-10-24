@@ -1,9 +1,9 @@
 CREATE TABLE usertable (
-    sex INTEGER NOT NULL,
-    name TEXT NOT NULL,
-    age INTEGER NOT NULL
+  userid INTEGER NOT NULL,
+  data TEXT,
+  modifytime TEXT NOT NULL
 );
 
-select_by_username:
+select_by_userid:
 select * from usertable
-where name = ?;
+where userid = ?;
