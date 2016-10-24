@@ -1,16 +1,21 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt' // 增加apt插件
 apply plugin: 'com.squareup.sqldelight'//sqldelight 插件
+apply plugin: 'me.tatarka.retrolambda'
+
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion '24.0.0'
     defaultConfig {
         applicationId "com.zs.cacheannotation"
         minSdkVersion 15
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
     buildTypes {
         release {
@@ -21,12 +26,26 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    final SUPPORT_LIBRARY_VERSION = '23.4.0'
+    final DAGGER_VERSION = '2.2'
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile "com.android.support:appcompat-v7:$SUPPORT_LIBRARY_VERSION"
+    compile 'com.squareup.sqlbrite:sqlbrite:0.6.3'
+    compile 'io.reactivex:rxjava:1.1.5'
+    compile 'io.reactivex:rxandroid:1.2.0'
+
+    //auvalue+gson+parceable:start   这部分第三方库的版本不要搞错！！！
+    provided 'com.google.auto.value:auto-value:1.2-rc1'
+    apt 'com.google.auto.value:auto-value:1.2-rc1'
+    apt 'com.ryanharter.auto.value:auto-value-parcel:0.2.3-rc2'
+    provided 'com.ryanharter.auto.value:auto-value-gson:0.4.2'
+    //auvalue+gson+parceable:end
+
+    apt 'com.squareup:javapoet:1.7.0'
+    // https://github.com/rharter/auto-value-parcel/issues/64
+    compile "com.google.dagger:dagger:$DAGGER_VERSION"
+    apt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
     compile project(':cacheannotation')
     apt project(':cacheprocessors')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    compile 'com.android.support:appcompat-v7:23.2.0'
-    testCompile 'junit:junit:4.12'
 }
