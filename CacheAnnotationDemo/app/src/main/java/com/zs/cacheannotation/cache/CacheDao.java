@@ -2,8 +2,8 @@ package com.zs.cacheannotation.cache;
 
 import com.cacheannotation.annotaion.AutoCache;
 import com.cacheannotation.annotaion.QueryCache;
+import com.zs.cacheannotation.data.model.UserCacheModel;
 import com.zs.cacheannotation.data.model.UserModel;
-import com.zs.cacheannotation.sql.UserCacheModel;
 
 /**
  * Created by zhj on 2016/10/23.

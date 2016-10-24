@@ -18,6 +18,7 @@ public abstract class UserModel implements Parcelable {
 
     public abstract String name();
 
+    //Autovalue配合gson使用时，需要提供这个静态方法
     public static TypeAdapter<UserModel> typeAdapter(Gson gson) {
         return new AutoValue_UserModel.GsonTypeAdapter(gson);
     }

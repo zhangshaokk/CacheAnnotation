@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.squareup.sqlbrite.BriteDatabase;
 import com.squareup.sqlbrite.SqlBrite;
-import com.zs.cacheannotation.sql.UserCacheModel;
+import com.zs.cacheannotation.data.model.UserCacheModel;
 
 import rx.schedulers.Schedulers;
 
