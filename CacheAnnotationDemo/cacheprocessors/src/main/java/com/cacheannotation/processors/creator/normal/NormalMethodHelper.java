@@ -26,7 +26,7 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 
 /**
- * 描述：
+ * 描述：生成java方法体的工具类
  *
  * @author zhj on 16/10/21.
  */
@@ -162,31 +162,30 @@ public class NormalMethodHelper implements IJavaFileCreator.ICacheMethodBuilder 
 
         ClassName cacheModelName = ClassName.get(cacheModel.substring(0, cacheModel.lastIndexOf("."))
                 , cacheModel.substring(cacheModel.lastIndexOf(".") + 1));
-        ClassName log = ClassName.get("com.yunyou.pengyouwan.util", "LogUtil");
+        ClassName log = ClassName.get("android.util", "Log");
         ClassName contentValues = ClassName.get("android.content", "ContentValues");
         if (useCache == null || useCache.equals("")) {
             builder.addCode(getFormatInsertCode(),
                     log, insertBean, contentValues, cacheModelName,
-                    keys, keys, cacheModelName,
+                    keys, cacheModelName,
                     whereClause, keys, cacheModelName, log,
-                    cacheModelName, keys, keys,
+                    cacheModelName, keys,
                     cacheModelName, whereClause, keys);
         } else {
             builder.addCode(getUsecacheStr(),
                     log, insertBean, contentValues, cacheModelName,
-                    keys, keys, useCache, cacheModelName, insertBean, cacheModelName,
+                    keys, useCache, cacheModelName, insertBean, cacheModelName,
                     whereClause, keys, cacheModelName, log,
-                    cacheModelName, keys, keys,
+                    cacheModelName, keys,
                     cacheModelName, whereClause, keys);
         }
     }
 
     private String getUsecacheStr() {
-        return "$T.d(TAG + \": insert or update start\");\n" +
+        return "$T.d(TAG , \": insert or update start\");\n" +
                 "if ($N != null) {\n" +
                 "\t$T cv = new $T.Marshal()\n" +
-                "\t\t  .gameid(Long.parseLong($N[0]))\n" +
-                "\t\t  .type(Long.parseLong($N[1]))\n" +
+                "\t\t  .userid(Long.parseLong($N[0]))\n" +
                 "\t\t  .modifytime(System.currentTimeMillis() + \"\")\n" +
                 "\t\t  .asContentValues();\n" +
                 "\tif ($N==0) {\n" +
@@ -201,8 +200,7 @@ public class NormalMethodHelper implements IJavaFileCreator.ICacheMethodBuilder 
                 "\t$T.d(TAG, \"update commpletd\");\n" +
                 "} else {\n" +
                 "\tContentValues cv = new $T.Marshal()\n" +
-                "\t\t.gameid(Long.parseLong($N[0]))\n" +
-                "\t\t.type(Long.parseLong($N[1]))\n" +
+                "\t\t.userid(Long.parseLong($N[0]))\n" +
                 "\t\t.modifytime(System.currentTimeMillis() + \"\")\n" +
                 "\t\t.asContentValues();\n" +
                 "\tmBriteDatabase.update($T.TABLE_NAME, cv,\n" +
@@ -214,11 +212,10 @@ public class NormalMethodHelper implements IJavaFileCreator.ICacheMethodBuilder 
      * 插入数据库的硬编码代码
      */
     private String getFormatInsertCode() {
-        return "$T.d(TAG + \": insert or update start\");\n" +
+        return "$T.d(TAG , \": insert or update start\");\n" +
                 "if ($N != null) {\n" +
                 "\t$T cv = new $T.Marshal()\n" +
-                "\t\t  .gameid(Long.parseLong($N[0]))\n" +
-                "\t\t  .type(Long.parseLong($N[1]))\n" +
+                "\t\t  .userid(Long.parseLong($N[0]))\n" +
                 "\t\t  .modifytime(System.currentTimeMillis() + \"\")\n" +
                 "\t\t  .asContentValues();\n" +
                 "\tint line = mBriteDatabase.update($T.TABLE_NAME, cv,\n" +
@@ -230,8 +227,7 @@ public class NormalMethodHelper implements IJavaFileCreator.ICacheMethodBuilder 
                 "\t$T.d(TAG, \"update commpletd\");\n" +
                 "} else {\n" +
                 "\tContentValues cv = new $T.Marshal()\n" +
-                "\t\t\t.gameid(Long.parseLong($N[0]))\n" +
-                "\t\t.type(Long.parseLong($N[1]))\n" +
+                "\t\t.userid(Long.parseLong($N[0]))\n" +
                 "\t\t.modifytime(System.currentTimeMillis() + \"\")\n" +
                 "\t\t.asContentValues();\n" +
                 "\tmBriteDatabase.update($T.TABLE_NAME, cv,\n" +
@@ -251,6 +247,7 @@ public class NormalMethodHelper implements IJavaFileCreator.ICacheMethodBuilder 
         for (Element pElement : methodElement.getParameters()) {
             VariableElement paramElement = (VariableElement) pElement;
             builder.addParameter(getParameterSpec(paramElement));
+            //这里，是要找到被SQLKey标志的参数，然后拿到参数的名称
             SQLKey sqlKey = paramElement.getAnnotation(SQLKey.class);
             if (sqlKey != null) {
                 keys = paramElement.getSimpleName().toString();
@@ -283,20 +280,24 @@ public class NormalMethodHelper implements IJavaFileCreator.ICacheMethodBuilder 
         ClassName beanName = ClassName.get(returnBean.substring(0, returnBean.lastIndexOf("."))
                 , returnBean.substring(returnBean.lastIndexOf(".") + 1));
         ClassName cursor = ClassName.get("android.database", "Cursor");
-        ClassName log = ClassName.get("com.yunyou.pengyouwan.util", "LogUtil");
+        ClassName log = ClassName.get("android.util", "Log");
         builder.addCode(getFormatSearchCode(noReturn), log, cursor, sql, keys
                 , cacheModelName, cacheModelName, beanName, beanName, log);
     }
 
     /**
      * 返回查询的硬编码代码
-     *
+     * 简单说明一下占位符
+     * $S for Strings
+     * $T for Types
+     * $N for Names(我们自己生成的方法名或者变量名等等)
+     这里的$T，在生成的源代码里面，也会自动导入你的类。
      * @param noReturn 是否有返回值
      * @return
      */
     private String getFormatSearchCode(boolean noReturn) {
         return noReturn ? "" : "return " + "Observable.create(subscriber -> {\n" +
-                "$T.d(TAG, \"do get cache startcacheprocessor:--\");\n" +
+                "$T.d(TAG, \"do get cache start:--\");\n" +
                 "$T cursor = mBriteDatabase.query($S,$N);\n" +
                 "boolean result = false;\n" +
                 "if (cursor.moveToNext()) {\n" +

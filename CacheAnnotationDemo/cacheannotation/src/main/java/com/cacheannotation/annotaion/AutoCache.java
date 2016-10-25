@@ -14,5 +14,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
 public @interface AutoCache {
-    String tagName() default "";
+    String tagName() default "";//打log时tag的名称
 }

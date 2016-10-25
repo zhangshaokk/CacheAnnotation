@@ -1,6 +1,7 @@
 package com.zs.cacheannotation;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.zs.cacheannotation.injection.component.ApplicationComponent;
 import com.zs.cacheannotation.injection.module.ApplicationModule;
@@ -23,5 +24,13 @@ public class DemoApplication extends Application {
         mApplicationComponent = DaggerApplicationComponent.builder()
                 .applicationModule(new ApplicationModule(this)).build();
         mApplicationComponent.inject(this);
+    }
+
+    public static DemoApplication get(Context context) {
+        return (DemoApplication) context.getApplicationContext();
+    }
+
+    public ApplicationComponent getComponent() {
+        return mApplicationComponent;
     }
 }

@@ -21,6 +21,8 @@ public abstract class UserModel implements Parcelable {
 
     public abstract int userid();
 
+    public long cache_time;//用于记录此数据上次刷新数据库的时间点
+
     //Autovalue配合gson使用时，需要提供这个静态方法
     public static TypeAdapter<UserModel> typeAdapter(Gson gson) {
         return new AutoValue_UserModel.GsonTypeAdapter(gson);

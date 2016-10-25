@@ -16,19 +16,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 
-/**
- * Copyright (C) jaydenlau Inc.All Rights Reserved.
- * FileName：com.pengyouwan.xiaopengapp.injection.module.
- *
- * @Description：
- * Provide application-level dependencies. Mainly singleton object that can be injected from
- * anywhere in the app.
- *
- * History：
- * 版本号 作者 日期 简要介绍相关操作
- * ${VERSION} jaydenlau 16/8/8 Create
- * 2.2
- */
+
 
 @Module
 public class ApplicationModule {

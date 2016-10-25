@@ -33,6 +33,7 @@ import javax.lang.model.element.TypeElement;
 
 /**
  * 处理自定义cache注解.
+ * @author  zhj
  */
 @AutoService(Processor.class)
 public class CacheProcessor extends AbstractProcessor {
@@ -105,6 +106,7 @@ public class CacheProcessor extends AbstractProcessor {
                 .build();
         try {
             javaFile.writeTo(mFiler);
+            System.out.println("cacheprocessor:完成一个文件编写");
         } catch (IOException e) {
             e.printStackTrace();
         }
