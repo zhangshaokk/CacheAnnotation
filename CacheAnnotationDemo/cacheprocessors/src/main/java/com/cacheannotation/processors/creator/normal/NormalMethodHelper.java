@@ -182,7 +182,7 @@ public class NormalMethodHelper implements IJavaFileCreator.ICacheMethodBuilder 
     }
 
     private String getUsecacheStr() {
-        return "$T.d(TAG , \": insert or update start\");\n" +
+        return "$T.d(TAG , \"insert or update start\");\n" +
                 "if ($N != null) {\n" +
                 "\t$T cv = new $T.Marshal()\n" +
                 "\t\t  .userid(Long.parseLong($N[0]))\n" +
@@ -212,7 +212,7 @@ public class NormalMethodHelper implements IJavaFileCreator.ICacheMethodBuilder 
      * 插入数据库的硬编码代码
      */
     private String getFormatInsertCode() {
-        return "$T.d(TAG , \": insert or update start\");\n" +
+        return "$T.d(TAG , \"insert or update start\");\n" +
                 "if ($N != null) {\n" +
                 "\t$T cv = new $T.Marshal()\n" +
                 "\t\t  .userid(Long.parseLong($N[0]))\n" +

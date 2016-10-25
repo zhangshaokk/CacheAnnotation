@@ -14,7 +14,7 @@ import rx.Observable;
 /**
  * Created by zhj on 2016/10/23.
  */
-@AutoCache //声明需要生成此接口的实现类
+@AutoCache(tagName = "CacheDao") //声明需要生成此接口的实现类
 public interface CacheDao {
 
     //添加一个需要实现为查询的新方法
